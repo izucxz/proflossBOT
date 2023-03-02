@@ -223,7 +223,7 @@ client.on("interactionCreate", async (interaction) => {
         const embed = {
           color: 0xff0000,
           author: {
-            name: `AlphaKing`
+            name: `AlphaKing`,
           },
           title: "Wallet Manager",
           fields: [
@@ -280,8 +280,7 @@ client.on("interactionCreate", async (interaction) => {
         };
         await interaction.reply({ embeds: [embed], ephemeral: true });
         break;
-        
-      // Add cases for other button clicks if needed
+
     }
   }
 });
