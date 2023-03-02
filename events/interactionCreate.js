@@ -201,38 +201,39 @@ client.on("interactionCreate", async (interaction) => {
         const user = interaction.user;
         const savedAddress = savedAddresses.get(user.id);
 
-        if (!savedAddress) {
-          await interaction.reply({
-            content: "`You have not saved any Ethereum addresses yet.`",
-            ephemeral: true,
-          });
-          return;
-        }
-
         const row = new ActionRowBuilder().addComponents(
           new ButtonBuilder()
             .setCustomId("secondary")
             .setLabel("➕")
-            .setStyle("Secondary"),
+            .setStyle("Primary"),
           new ButtonBuilder()
             .setCustomId("delete_wallet")
             .setLabel("❌")
-            .setStyle("Danger")
+            .setStyle("Danger"),
+          new ButtonBuilder()
+            .setCustomId("refresh_wallet")
+            .setLabel("🔃")
+            .setStyle("Secondary")
         );
 
-        const embed = {
+        let embed = {
           color: 0xff0000,
           author: {
             name: `AlphaKing`,
           },
           title: "Wallet Manager",
-          fields: [
+        };
+
+        if (savedAddress) {
+          embed.fields = [
             {
-              name: " ",
+              name: "Saved Wallet",
               value: `\`${savedAddress}\``,
             },
-          ],
-        };
+          ];
+        } else {
+          embed.description = "No saved wallet";
+        }
 
         await interaction.reply({
           embeds: [embed],
@@ -251,10 +252,13 @@ client.on("interactionCreate", async (interaction) => {
   if (interaction.isButton()) {
     const user = interaction.user;
 
+    // Declare savedAddress variable here
+    let savedAddress;
+
     switch (interaction.customId) {
       case "delete_wallet":
         // Check if the user has already saved an Ethereum address
-        const savedAddress = savedAddresses.get(user.id);
+        savedAddress = savedAddresses.get(user.id);
         if (!savedAddress) {
           await interaction.reply({
             content: "You have not saved any Ethereum address.",
@@ -266,21 +270,52 @@ client.on("interactionCreate", async (interaction) => {
         // Delete the saved Ethereum address for the user
         savedAddresses.delete(user.id);
 
-        // Create the embed message with the deleted Ethereum address
-        const embed = {
-          color: 0xff0000,
-          title: "The following address has been deleted",
-          fields: [
-            {
-              name: " ",
-              value: `\`${savedAddress}\``,
-            },
-          ],
-          timestamp: new Date(),
-        };
-        await interaction.reply({ embeds: [embed], ephemeral: true });
+        await interaction.reply({
+          content: "The following address has been deleted.",
+          ephemeral: true,
+        });
         break;
 
+      case "refresh_wallet":
+        // Get the saved Ethereum address for the user
+        savedAddress = savedAddresses.get(user.id);
+        if (!savedAddress) {
+          // If there's no saved Ethereum address, update the embed to show "No saved wallet"
+          let embed = {
+            color: 0xff0000,
+            author: {
+              name: `AlphaKing`,
+            },
+            title: "Wallet Manager",
+            description: "No saved wallet",
+          };
+
+          await interaction.update({
+            embeds: [embed],
+            ephemeral: true,
+          });
+        } else {
+          // If there's a saved Ethereum address, update the embed with the saved address
+          let embed = {
+            color: 0xff0000,
+            author: {
+              name: `AlphaKing`,
+            },
+            title: "Wallet Manager",
+            fields: [
+              {
+                name: "Saved Wallet",
+                value: `\`${savedAddress}\``,
+              },
+            ],
+          };
+
+          await interaction.update({
+            embeds: [embed],
+            ephemeral: true,
+          });
+        }
+        break;
     }
   }
 });
