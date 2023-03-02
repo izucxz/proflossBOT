@@ -6,6 +6,9 @@ const {
   ButtonStyle,
   EmbedBuilder,
   Events,
+  ModalBuilder,
+  TextInputBuilder,
+  TextInputStyle,
 } = require("discord.js");
 const client = require("../index.js");
 const axios = require("axios");
@@ -203,7 +206,7 @@ client.on("interactionCreate", async (interaction) => {
 
         const row = new ActionRowBuilder().addComponents(
           new ButtonBuilder()
-            .setCustomId("secondary")
+            .setCustomId("modal")
             .setLabel("➕")
             .setStyle("Primary"),
           new ButtonBuilder()
@@ -316,6 +319,30 @@ client.on("interactionCreate", async (interaction) => {
           });
         }
         break;
+
+      case "modal": {
+        const modal = new ModalBuilder()
+          .setCustomId("myModal")
+          .setTitle("Add Wallet");
+
+        const hobbiesInput = new TextInputBuilder()
+          .setCustomId("hobbiesInput")
+          .setLabel("What's some of your favorite hobbies?")
+          // Paragraph means multiple lines of text.
+          .setStyle(TextInputStyle.Paragraph);
+
+        // An action row only holds one text input,
+        // so you need one action row per text input.
+        const secondActionRow = new ActionRowBuilder().addComponents(
+          hobbiesInput
+        );
+
+        // Add inputs to the modal
+        modal.addComponents(secondActionRow);
+
+        // Show the modal to the user
+        await interaction.showModal(modal);
+      }
     }
   }
 });
