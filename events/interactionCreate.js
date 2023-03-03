@@ -3,8 +3,6 @@ const { InteractionType } = require("discord.js");
 const {
   ActionRowBuilder,
   ButtonBuilder,
-  ButtonStyle,
-  EmbedBuilder,
   Events,
   ModalBuilder,
   TextInputBuilder,
@@ -274,7 +272,7 @@ client.on("interactionCreate", async (interaction) => {
         savedAddresses.delete(user.id);
 
         await interaction.reply({
-          content: "The following address has been deleted.",
+          content: "The address has been deleted.",
           ephemeral: true,
         });
         break;
@@ -325,24 +323,33 @@ client.on("interactionCreate", async (interaction) => {
           .setCustomId("myModal")
           .setTitle("Add Wallet");
 
-        const hobbiesInput = new TextInputBuilder()
-          .setCustomId("hobbiesInput")
-          .setLabel("What's some of your favorite hobbies?")
-          // Paragraph means multiple lines of text.
-          .setStyle(TextInputStyle.Paragraph);
+        const addressInput = new TextInputBuilder()
+          .setCustomId("addressInput")
+          .setLabel("PUT YOUR ETHEREUM ADDRESS")
+          .setPlaceholder("0x123abc...")
+          .setStyle(TextInputStyle.Paragraph)
+          .setRequired(true);
 
         // An action row only holds one text input,
         // so you need one action row per text input.
-        const secondActionRow = new ActionRowBuilder().addComponents(
-          hobbiesInput
+        const actionRow = new ActionRowBuilder().addComponents(
+          addressInput
         );
 
         // Add inputs to the modal
-        modal.addComponents(secondActionRow);
+        modal.addComponents(actionRow);
 
         // Show the modal to the user
         await interaction.showModal(modal);
+        break;
       }
     }
   }
+});
+
+client.on(Events.InteractionCreate, async interaction => {
+	if (!interaction.isModalSubmit()) return;
+	if (interaction.customId === 'myModal') {
+		await interaction.reply({ content: 'Your address has been saved.', ephemeral: true });
+	}
 });
