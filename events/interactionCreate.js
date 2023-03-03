@@ -271,7 +271,7 @@ client.on("interactionCreate", async (interaction) => {
         // Delete the saved Ethereum address for the user
         savedAddresses.delete(user.id);
 
-        await interaction.reply({
+        await interaction.update({
           content: "The address has been deleted.",
           ephemeral: true,
         });
