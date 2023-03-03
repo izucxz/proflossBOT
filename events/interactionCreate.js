@@ -278,18 +278,13 @@ client.on("interactionCreate", async (interaction) => {
               const totalSupply = totalSupplyResponse.data.result;
         
               const percentageOwned = ((ownedTokens.length / totalSupply) * 100).toFixed(2);
-        
-              const contractUrl = `https://api.etherscan.io/api?module=contract&action=getabi&address=${contractAddress}&apikey=${etherscanApiKey}`;
-              const contractResponse = await axios.get(contractUrl);
-              const contractData = JSON.parse(contractResponse.data.result);
-              const contractName = contractData.find((d) => d.type === "constructor").inputs.find((i) => i.name === "_name").value;
-        
+
               const embed = {
                 color: 0xff0000,
                 author: {
                   name: "AlphaKing",
                 },
-                title: contractName,
+                title: `contractName`,
                 description: "Showing profit / loss information of given collection",
                 fields: [
                   {
