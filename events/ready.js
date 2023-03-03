@@ -32,7 +32,7 @@ client.on("ready", () => {
       type: ApplicationCommandType.ChatInput,
     },
     {
-      name: 'save_wallet',
+      name: 'wallet_add',
       description: 'Save your Ethereum address',
       type: ApplicationCommandType.ChatInput,
       options: [

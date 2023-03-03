@@ -11,6 +11,7 @@ const {
 const client = require("../index.js");
 const axios = require("axios");
 const Web3 = require("web3");
+
 // A map to store saved Ethereum addresses for each user
 const savedAddresses = new Map();
 
@@ -155,7 +156,7 @@ client.on("interactionCreate", async (interaction) => {
         break;
       }
 
-      case "save_wallet":
+      case "wallet_add":
         // Check if the user has specified the 'add' option
         const addOption = options.get("address");
         if (addOption) {
@@ -193,7 +194,7 @@ client.on("interactionCreate", async (interaction) => {
         } else {
           await interaction.reply({
             content:
-              "Please provide an Ethereum address using the `/save_wallet` command with the `add` option. Example usage: `/save_wallet add 0x123abc...`",
+              "Please provide an Ethereum address using the `/wallet_add` command with the `add` option. Example usage: `/wallet_add add 0x123abc...`",
           });
         }
         break;
@@ -204,16 +205,16 @@ client.on("interactionCreate", async (interaction) => {
 
         const row = new ActionRowBuilder().addComponents(
           new ButtonBuilder()
-            .setCustomId("modal")
-            .setLabel("➕")
-            .setStyle("Primary"),
-          new ButtonBuilder()
             .setCustomId("delete_wallet")
-            .setLabel("❌")
-            .setStyle("Danger"),
+            .setLabel("❎ Delete")
+            .setStyle("Secondary"),
           new ButtonBuilder()
             .setCustomId("refresh_wallet")
-            .setLabel("🔃")
+            .setLabel("🔄 Refresh")
+            .setStyle("Secondary"),
+          new ButtonBuilder()
+            .setCustomId("balance")
+            .setLabel("🏧 Balance")
             .setStyle("Secondary")
         );
 
@@ -228,7 +229,7 @@ client.on("interactionCreate", async (interaction) => {
         if (savedAddress) {
           embed.fields = [
             {
-              name: "Saved Wallet",
+              name: " ",
               value: `\`${savedAddress}\``,
             },
           ];
@@ -305,7 +306,7 @@ client.on("interactionCreate", async (interaction) => {
             title: "Wallet Manager",
             fields: [
               {
-                name: "Saved Wallet",
+                name: " ",
                 value: `\`${savedAddress}\``,
               },
             ],
@@ -345,11 +346,4 @@ client.on("interactionCreate", async (interaction) => {
       }
     }
   }
-});
-
-client.on(Events.InteractionCreate, async interaction => {
-	if (!interaction.isModalSubmit()) return;
-	if (interaction.customId === 'myModal') {
-		await interaction.reply({ content: 'Your address has been saved.', ephemeral: true });
-	}
 });
