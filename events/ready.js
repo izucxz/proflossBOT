@@ -54,5 +54,16 @@ client.on("ready", () => {
       description: 'View your saved Ethereum addresses',
       type: ApplicationCommandType.ChatInput,
     },
+    {
+      name: "profit",
+      description: "Profit information for a given collection",
+      type: ApplicationCommandType.ChatInput,
+      options: [{
+        name: 'contract_address',
+        type: 3,
+        description: 'Put collection contract address',
+        required: true,
+      }]
+    },
   ]);
 });

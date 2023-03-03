@@ -243,6 +243,75 @@ client.on("interactionCreate", async (interaction) => {
         });
         break;
 
+      case "profit":
+          const contractAddressOption = options.get("contract_address");
+          if (contractAddressOption) {
+            const contractAddress = contractAddressOption.value;
+            const user = interaction.user;
+            const savedAddress = savedAddresses.get(user.id);
+        
+            if (!savedAddress) {
+              await interaction.reply({
+                content: "Please save an Ethereum address using the `/wallet_add` command first.",
+                ephemeral: true,
+              });
+              return;
+            }
+        
+            const inventoryUrl = `https://api.etherscan.io/api?module=account&action=tokennfttx&contractaddress=${contractAddress}&address=${savedAddress}&apikey=${etherscanApiKey}`;
+        
+            try {
+              const response = await axios.get(inventoryUrl);
+              const nfts = response.data.result;
+        
+              if (nfts.length === 0) {
+                await interaction.reply({
+                  content: `0`,
+                  ephemeral: true,
+                });
+                return;
+              }
+        
+              const ownedTokens = nfts.map((nft) => nft.tokenID);
+              const totalSupplyUrl = `https://api.etherscan.io/api?module=stats&action=tokensupply&contractaddress=${contractAddress}&apikey=${etherscanApiKey}`;
+              const totalSupplyResponse = await axios.get(totalSupplyUrl);
+              const totalSupply = totalSupplyResponse.data.result;
+        
+              const percentageOwned = ((ownedTokens.length / totalSupply) * 100).toFixed(2);
+              const profit = (ownedTokens.length * 100).toFixed(2);
+        
+              const embed = {
+                color: 0xff0000,
+                author: {
+                  name: "AlphaKing",
+                },
+                title: "Information",
+                description: "Showing profit / loss information of given collection.",
+                fields: [
+                  {
+                    name: "Number of NFTs Owned",
+                    value: ownedTokens.length,
+                  },
+                ],
+              };
+        
+              await interaction.reply({ embeds: [embed], ephemeral: true });
+            } catch (error) {
+              console.error(error);
+              await interaction.reply({
+                content: "There was an error getting the profit information.",
+                ephemeral: true,
+              });
+            }
+          } else {
+            await interaction.reply({
+              content: "Please provide the contract address of the NFT collection using the `/profit` command with the `contract_address` option. Example usage: `/profit --contract_address 0x123abc...`",
+              ephemeral: true,
+            });
+          }
+          break;
+        
+
       default:
         break;
     }
@@ -271,7 +340,7 @@ client.on("interactionCreate", async (interaction) => {
         // Delete the saved Ethereum address for the user
         savedAddresses.delete(user.id);
 
-        await interaction.update({
+        await interaction.reply({
           content: "The address has been deleted.",
           ephemeral: true,
         });
@@ -318,7 +387,7 @@ client.on("interactionCreate", async (interaction) => {
         }
         break;
 
-        case "balance":
+      case "balance":
           // Get the saved Ethereum address for the user
           savedAddress = savedAddresses.get(user.id);
           if (!savedAddress) {
