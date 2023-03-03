@@ -243,7 +243,7 @@ client.on("interactionCreate", async (interaction) => {
         });
         break;
 
-      case "profit":
+        case "profit":
           const contractAddressOption = options.get("contract_address");
           if (contractAddressOption) {
             const contractAddress = contractAddressOption.value;
@@ -278,19 +278,27 @@ client.on("interactionCreate", async (interaction) => {
               const totalSupply = totalSupplyResponse.data.result;
         
               const percentageOwned = ((ownedTokens.length / totalSupply) * 100).toFixed(2);
-              const profit = (ownedTokens.length * 100).toFixed(2);
+        
+              const contractUrl = `https://api.etherscan.io/api?module=contract&action=getabi&address=${contractAddress}&apikey=${etherscanApiKey}`;
+              const contractResponse = await axios.get(contractUrl);
+              const contractData = JSON.parse(contractResponse.data.result);
+              const contractName = contractData.find((d) => d.type === "constructor").inputs.find((i) => i.name === "_name").value;
         
               const embed = {
                 color: 0xff0000,
                 author: {
                   name: "AlphaKing",
                 },
-                title: "Information",
-                description: "Showing profit / loss information of given collection.",
+                title: contractName,
+                description: "Showing profit / loss information of given collection",
                 fields: [
                   {
                     name: "Number of NFTs Owned",
                     value: ownedTokens.length,
+                  },
+                  {
+                    name: "Percentage of Total Supply Owned",
+                    value: `${percentageOwned}%`,
                   },
                 ],
               };
