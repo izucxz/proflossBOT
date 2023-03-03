@@ -319,31 +319,6 @@ client.on("interactionCreate", async (interaction) => {
         }
         break;
 
-      case "modal": {
-        const modal = new ModalBuilder()
-          .setCustomId("myModal")
-          .setTitle("Add Wallet");
-
-        const addressInput = new TextInputBuilder()
-          .setCustomId("addressInput")
-          .setLabel("PUT YOUR ETHEREUM ADDRESS")
-          .setPlaceholder("0x123abc...")
-          .setStyle(TextInputStyle.Paragraph)
-          .setRequired(true);
-
-        // An action row only holds one text input,
-        // so you need one action row per text input.
-        const actionRow = new ActionRowBuilder().addComponents(
-          addressInput
-        );
-
-        // Add inputs to the modal
-        modal.addComponents(actionRow);
-
-        // Show the modal to the user
-        await interaction.showModal(modal);
-        break;
-      }
     }
   }
 });
