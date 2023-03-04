@@ -243,7 +243,7 @@ client.on("interactionCreate", async (interaction) => {
         });
         break;
 
-        case "profit":
+      case "profit":
           const contractAddressOption = options.get("contract_address");
           if (contractAddressOption) {
             const contractAddress = contractAddressOption.value;
