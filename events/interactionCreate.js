@@ -242,7 +242,39 @@ client.on("interactionCreate", async (interaction) => {
           ephemeral: true,
         });
         break;
-        
+
+        case "profit":
+          const contractAddress = options.getString("contract_address");
+          const requestOptions = {
+            method: "GET",
+            url: "https://api.looksrare.org/api/v1/collections",
+            params: { address: contractAddress },
+            headers: { accept: "application/json" },
+          };
+          try {
+            const response = await axios(requestOptions);
+            console.log(response.data);
+            // process the response data
+            const name = response.data.data.name;
+            const bannerUri = response.data.data.bannerURI;
+            
+            // send an embed message with the collection name in the title and the banner image
+            const embed = {
+              title: `${name}`,
+              author: {
+                name: "AlphaKing",
+              },
+              image: {
+                url: bannerUri
+              }
+            };
+            await interaction.reply({ embeds: [embed] });
+          } catch (error) {
+            console.error(error);
+            await interaction.reply(`Error: ${error.response.data.message}`);
+          }
+          break;
+                
 
       default:
         break;
@@ -320,48 +352,48 @@ client.on("interactionCreate", async (interaction) => {
         break;
 
       case "balance":
-          // Get the saved Ethereum address for the user
-          savedAddress = savedAddresses.get(user.id);
-          if (!savedAddress) {
-            // If there's no saved Ethereum address, send an error message
-            await interaction.reply({
-              content: "You have not saved any Ethereum address.",
-              ephemeral: true,
-            });
-            return;
-          }
-  
-          // Get the balance of the saved Ethereum address from etherscan.io API
-           // Replace with your etherscan API key
-          const etherscanApiUrl = `https://api.etherscan.io/api?module=account&action=balance&address=${savedAddress}&tag=latest&apikey=${etherscanApiKey}`;
-          const response = await fetch(etherscanApiUrl);
-          const data = await response.json();
-          const balance = data.result / 10 ** 18; // Convert wei to ether
-  
-          // Update the embed with the saved address and its balance
-          let embed = {
-            color: 0xff0000,
-            author: {
-              name: `AlphaKing`,
-            },
-            title: "Wallet Manager",
-            fields: [
-              {
-                name: "Address",
-                value: `\`${savedAddress}\``,
-              },
-              {
-                name: "Balance",
-                value: `${balance} ETH`,
-              },
-            ],
-          };
-  
-          await interaction.update({
-            embeds: [embed],
+        // Get the saved Ethereum address for the user
+        savedAddress = savedAddresses.get(user.id);
+        if (!savedAddress) {
+          // If there's no saved Ethereum address, send an error message
+          await interaction.reply({
+            content: "You have not saved any Ethereum address.",
             ephemeral: true,
           });
-          break;
-      }
+          return;
+        }
+
+        // Get the balance of the saved Ethereum address from etherscan.io API
+        // Replace with your etherscan API key
+        const etherscanApiUrl = `https://api.etherscan.io/api?module=account&action=balance&address=${savedAddress}&tag=latest&apikey=${etherscanApiKey}`;
+        const response = await fetch(etherscanApiUrl);
+        const data = await response.json();
+        const balance = data.result / 10 ** 18; // Convert wei to ether
+
+        // Update the embed with the saved address and its balance
+        let embed = {
+          color: 0xff0000,
+          author: {
+            name: `AlphaKing`,
+          },
+          title: "Wallet Manager",
+          fields: [
+            {
+              name: "Address",
+              value: `\`${savedAddress}\``,
+            },
+            {
+              name: "Balance",
+              value: `${balance} ETH`,
+            },
+          ],
+        };
+
+        await interaction.update({
+          embeds: [embed],
+          ephemeral: true,
+        });
+        break;
     }
-  });
+  }
+});
