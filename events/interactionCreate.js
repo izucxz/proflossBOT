@@ -11,7 +11,6 @@ const {
 const client = require("../index.js");
 const axios = require("axios");
 const Web3 = require("web3");
-const etherscanApiKey = "YVWJPBY1SA6PGZUGUJDAVAG9G9HGVEPFQR";
 // A map to store saved Ethereum addresses for each user
 const savedAddresses = new Map();
 
@@ -244,36 +243,42 @@ client.on("interactionCreate", async (interaction) => {
         break;
 
         case "profit":
-          const contractAddress = options.getString("contract_address");
-          const requestOptions = {
-            method: "GET",
-            url: "https://api.looksrare.org/api/v1/collections",
-            params: { address: contractAddress },
-            headers: { accept: "application/json" },
-          };
-          try {
-            const response = await axios(requestOptions);
-            console.log(response.data);
-            // process the response data
-            const name = response.data.data.name;
-            const bannerUri = response.data.data.bannerURI;
-            
-            // send an embed message with the collection name in the title and the banner image
-            const embed = {
-              title: `${name}`,
-              author: {
-                name: "AlphaKing",
-              },
-              image: {
-                url: bannerUri
-              }
-            };
-            await interaction.reply({ embeds: [embed] });
-          } catch (error) {
-            console.error(error);
-            await interaction.reply(`Error: ${error.response.data.message}`);
-          }
-          break;
+  const contractAddress = options.getString("contract_address");
+  const requestOptions = {
+    method: "GET",
+    url: "https://api.blockspan.com/v1/collections/contract/" + contractAddress,
+    params: { chain: "eth-main" },
+    headers: {
+      accept: "application/json",
+      "X-API-KEY": "OXwNjFcCtiqTI1AMa4704sdNaUszfGb1",
+    },
+  };
+  try {
+    const response = await axios(requestOptions);
+    console.log(response.data);
+    // process the response data
+    const name = response.data.name;
+    const exchangeData = response.data.exchange_data.find(data => data.exchange === 'opensea');
+    const banner_image_url = exchangeData.banner_image_url;
+
+    // send an embed message with the collection name in the title and the banner image
+    const embed = {
+      title: `${name}`,
+      author: {
+        name: "AlphaKing",
+      },
+      image: {
+        url: banner_image_url
+      }
+    };
+    await interaction.reply({ embeds: [embed] });
+  } catch (error) {
+    console.error(error);
+    await interaction.reply(`Error: ${error.response.data.message}`);
+  }
+  break;
+
+
                 
 
       default:
