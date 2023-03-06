@@ -286,7 +286,7 @@ client.on("interactionCreate", async (interaction) => {
               },
             };
             const floorPriceResponse = await axios(floorPriceOptions);
-            const floorPrice = floorPriceResponse.data.floor_price.value;
+            const floorPrice = floorPriceResponse.data.floor_price.quantity;
         
             // send an embed message with the collection name in the title, the banner image, and floor price
             const embed = {
