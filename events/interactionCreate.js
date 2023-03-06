@@ -272,9 +272,9 @@ client.on("interactionCreate", async (interaction) => {
           const looksrareData = response.data.exchange_data.find(
             (data) => data.exchange === "looksrare"
           );
-          const looksrareUrl = looksrareData.exchange_url;
           const blurUrl = `https://blur.io/collection/${contractAddress}`;
           const x2y2Url = `https://x2y2.io/collection/${contractAddress}`;
+          const looksrareUrl = `https://looksrare.org/collections/${contractAddress}`;
 
           // send an embed message with the collection name in the title and the banner image
           const embed = {
