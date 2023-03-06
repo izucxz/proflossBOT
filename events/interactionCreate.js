@@ -242,61 +242,62 @@ client.on("interactionCreate", async (interaction) => {
         });
         break;
 
-        case "profit":
-  const contractAddress = options.getString("contract_address");
-  const requestOptions = {
-    method: "GET",
-    url: "https://api.blockspan.com/v1/collections/contract/" + contractAddress,
-    params: { chain: "eth-main" },
-    headers: {
-      accept: "application/json",
-      "X-API-KEY": "OXwNjFcCtiqTI1AMa4704sdNaUszfGb1",
-    },
-  };
-  try {
-    const response = await axios(requestOptions);
-    console.log(response.data);
-    
-    // process the response data
-    const name = response.data.name;
-    const exchangeData = response.data.exchange_data.find(data => data.exchange === 'opensea');
-    const banner_image_url = exchangeData.banner_image_url;
-    const openseaUrl = exchangeData.exchange_url;
-    const openseaExternalUrl = exchangeData.external_url;
-    const openseaDiscordUrl = exchangeData.discord_url;
-    const looksrareData = response.data.exchange_data.find(data => data.exchange === 'looksrare');
-    const looksrareUrl = looksrareData.exchange_url;
-    const blurUrl = `https://blur.io/collection/${contractAddress}`;
-    const x2y2Url = `https://x2y2.io/collection/${contractAddress}`;
+      case "profit":
+        const contractAddress = options.getString("contract_address");
+        const requestOptions = {
+          method: "GET",
+          url:
+            "https://api.blockspan.com/v1/collections/contract/" +
+            contractAddress,
+          params: { chain: "eth-main" },
+          headers: {
+            accept: "application/json",
+            "X-API-KEY": "OXwNjFcCtiqTI1AMa4704sdNaUszfGb1",
+          },
+        };
+        try {
+          const response = await axios(requestOptions);
+          console.log(response.data);
 
-    // send an embed message with the collection name in the title and the banner image
-    const embed = {
-      title: `${name}`,
-      author: {
-        name: "AlphaKing",
-      },
-      image: {
-        url: banner_image_url
-      },
-      fields: [
-        {
-          name: " ",
-          value: `[OpenSea](${openseaUrl}) ⎔ [Looksrare](${looksrareUrl}) ⎔ [Blur](${blurUrl}) ⎔ [X2Y2](${x2y2Url}) ⎔ [Website](${openseaExternalUrl}) ⎔ [Discord](${openseaDiscordUrl})`,
-          inline: true
+          // process the response data
+          const name = response.data.name;
+          const exchangeData = response.data.exchange_data.find(
+            (data) => data.exchange === "opensea"
+          );
+          const banner_image_url = exchangeData.banner_image_url;
+          const openseaUrl = exchangeData.exchange_url;
+          const openseaExternalUrl = exchangeData.external_url;
+          const openseaDiscordUrl = exchangeData.discord_url;
+          const looksrareData = response.data.exchange_data.find(
+            (data) => data.exchange === "looksrare"
+          );
+          const looksrareUrl = looksrareData.exchange_url;
+          const blurUrl = `https://blur.io/collection/${contractAddress}`;
+          const x2y2Url = `https://x2y2.io/collection/${contractAddress}`;
+
+          // send an embed message with the collection name in the title and the banner image
+          const embed = {
+            title: `${name}`,
+            author: {
+              name: "AlphaKing",
+            },
+            image: {
+              url: banner_image_url,
+            },
+            fields: [
+              {
+                name: " ",
+                value: `[OpenSea](${openseaUrl}) ⎔ [Looksrare](${looksrareUrl}) ⎔ [Blur](${blurUrl}) ⎔ [X2Y2](${x2y2Url}) ⎔ [Website](${openseaExternalUrl}) ⎔ [Discord](${openseaDiscordUrl})`,
+                inline: true,
+              },
+            ],
+          };
+          await interaction.reply({ embeds: [embed] });
+        } catch (error) {
+          console.error(error);
+          await interaction.reply(`Error: ${error.response.data.message}`);
         }
-      ]
-    };
-    await interaction.reply({ embeds: [embed] });
-  } catch (error) {
-    console.error(error);
-    await interaction.reply(`Error: ${error.response.data.message}`);
-  }
-  break;
-
-        
-
-
-         
+        break;
 
       default:
         break;
