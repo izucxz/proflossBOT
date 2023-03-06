@@ -282,13 +282,14 @@ client.on("interactionCreate", async (interaction) => {
             author: {
               name: "AlphaKing",
             },
+            description: "Showing profit/loss information",
             image: {
               url: banner_image_url,
             },
             fields: [
               {
-                name: " ",
-                value: `[OpenSea](${openseaUrl}) ⎔ [Looksrare](${looksrareUrl}) ⎔ [Blur](${blurUrl}) ⎔ [X2Y2](${x2y2Url}) ⎔ [Website](${openseaExternalUrl}) ⎔ [Discord](${openseaDiscordUrl})`,
+                name: "Links",
+                value: `[opensea](${openseaUrl}) ⎔ [looksrare](${looksrareUrl}) ⎔ [blur](${blurUrl}) ⎔ [x2y2](${x2y2Url}) ⎔ [website](${openseaExternalUrl}) ⎔ [discord](${openseaDiscordUrl})`,
                 inline: true,
               },
             ],
