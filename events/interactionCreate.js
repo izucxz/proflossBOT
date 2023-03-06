@@ -13,6 +13,7 @@ const axios = require("axios");
 const Web3 = require("web3");
 // A map to store saved Ethereum addresses for each user
 const savedAddresses = new Map();
+const etherscanApiKey = "YVWJPBY1SA6PGZUGUJDAVAG9G9HGVEPFQR";
 
 client.on("interactionCreate", async (interaction) => {
   // code
