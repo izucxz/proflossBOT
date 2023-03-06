@@ -25,7 +25,7 @@ client.on("interactionCreate", async (interaction) => {
       case "ping":
         {
           await interaction.reply({
-            content: "`Pong`",
+            content: "https://media.tenor.com/c9WptHOa_LMAAAAC/pong.gif",
           });
         }
         break;
