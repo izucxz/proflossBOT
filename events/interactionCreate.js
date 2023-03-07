@@ -220,7 +220,7 @@ client.on("interactionCreate", async (interaction) => {
         let embed = {
           color: 0xff0000,
           author: {
-            name: `AlphaKing`,
+            name: ` `,
           },
           title: "Wallet Manager",
         };
@@ -268,7 +268,7 @@ client.on("interactionCreate", async (interaction) => {
           const loadingEmbed = {
             title: "Collection Name",
             author: {
-              name: "AlphaKing",
+              name: " ",
             },
             description: "Showing profit/loss information",
             fields: [
@@ -320,7 +320,7 @@ client.on("interactionCreate", async (interaction) => {
           const embed = {
             title: `${name}`,
             author: {
-              name: "AlphaKing",
+              name: "Alpha King",
             },
             description: "Showing profit/loss information",
             image: {
@@ -388,7 +388,7 @@ client.on("interactionCreate", async (interaction) => {
           let embed = {
             color: 0xff0000,
             author: {
-              name: `AlphaKing`,
+              name: ` `,
             },
             title: "Wallet Manager",
             description: "No saved wallet",
@@ -403,7 +403,7 @@ client.on("interactionCreate", async (interaction) => {
           let embed = {
             color: 0xff0000,
             author: {
-              name: `AlphaKing`,
+              name: ` `,
             },
             title: "Wallet Manager",
             fields: [
@@ -444,7 +444,7 @@ client.on("interactionCreate", async (interaction) => {
         let embed = {
           color: 0xff0000,
           author: {
-            name: `AlphaKing`,
+            name: ` `,
           },
           title: "Wallet Manager",
           fields: [
