@@ -320,7 +320,7 @@ client.on("interactionCreate", async (interaction) => {
           const embed = {
             title: `${name}`,
             author: {
-              name: "AlphaKing",
+              name: "AlphaKings",
             },
             description: "Showing profit/loss information",
             image: {
