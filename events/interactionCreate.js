@@ -243,78 +243,108 @@ client.on("interactionCreate", async (interaction) => {
         });
         break;
 
-        case "profit":
-          const contractAddress = options.getString("contract_address");
-          const requestOptions = {
+      case "profit":
+        const contractAddress = options.getString("contract_address");
+        const requestOptions = {
+          method: "GET",
+          url:
+            "https://api.blockspan.com/v1/collections/contract/" +
+            contractAddress,
+          params: { chain: "eth-main" },
+          headers: {
+            accept: "application/json",
+            "X-API-KEY": "OXwNjFcCtiqTI1AMa4704sdNaUszfGb1",
+          },
+        };
+        try {
+          if (interaction.deferred || interaction.replied) {
+            return;
+          }
+
+          // defer the interaction before processing the request
+          await interaction.deferReply();
+
+          // send an initial "loading" message
+          const loadingEmbed = {
+            title: "Collection Name",
+            author: {
+              name: "AlphaKing",
+            },
+            description: "Showing profit/loss information",
+            fields: [
+              {
+                name: "Floor Price",
+                value: "`Loading`",
+                inline: false,
+              },
+              {
+                name: "Links",
+                value: `[opensea]() ⎔ [looksrare]() ⎔ [blur]() ⎔ [x2y2]() ⎔ [website]() ⎔ [discord]()`,
+                inline: true,
+              },
+            ],
+          };
+          const loadingMessage = await interaction.editReply({
+            embeds: [loadingEmbed],
+          });
+
+          const response = await axios(requestOptions);
+          console.log(response.data);
+
+          // process the response data
+          const name = response.data.name;
+          const exchangeData = response.data.exchange_data.find(
+            (data) => data.exchange === "opensea"
+          );
+          const banner_image_url = exchangeData.banner_image_url;
+          const openseaUrl = exchangeData.exchange_url;
+          const openseaExternalUrl = exchangeData.external_url;
+          const openseaDiscordUrl = exchangeData.discord_url;
+          const blurUrl = `https://blur.io/collection/${contractAddress}`;
+          const x2y2Url = `https://x2y2.io/collection/${contractAddress}`;
+          const looksrareUrl = `https://looksrare.org/collections/${contractAddress}`;
+
+          // fetch floor price of the collection
+          const floorPriceOptions = {
             method: "GET",
-            url:
-              "https://api.blockspan.com/v1/collections/contract/" +
-              contractAddress,
-            params: { chain: "eth-main" },
+            url: `https://data-api.nftgo.io/eth/v1/collection/${contractAddress}/metrics`,
             headers: {
               accept: "application/json",
-              "X-API-KEY": "OXwNjFcCtiqTI1AMa4704sdNaUszfGb1",
+              "X-API-KEY": "311ce43a-f864-4143-bc73-bf90762fa428",
             },
           };
-          try {
-            const response = await axios(requestOptions);
-            console.log(response.data);
-        
-            // process the response data
-            const name = response.data.name;
-            const exchangeData = response.data.exchange_data.find(
-              (data) => data.exchange === "opensea"
-            );
-            const banner_image_url = exchangeData.banner_image_url;
-            const openseaUrl = exchangeData.exchange_url;
-            const openseaExternalUrl = exchangeData.external_url;
-            const openseaDiscordUrl = exchangeData.discord_url;
-            const blurUrl = `https://blur.io/collection/${contractAddress}`;
-            const x2y2Url = `https://x2y2.io/collection/${contractAddress}`;
-            const looksrareUrl = `https://looksrare.org/collections/${contractAddress}`;
-        
-            // fetch floor price of the collection
-            const floorPriceOptions = {
-              method: "GET",
-              url: `https://data-api.nftgo.io/eth/v1/collection/${contractAddress}/metrics`,
-              headers: {
-                accept: "application/json",
-                "X-API-KEY": "311ce43a-f864-4143-bc73-bf90762fa428",
+          const floorPriceResponse = await axios(floorPriceOptions);
+          const floorPrice = floorPriceResponse.data.floor_price.quantity;
+
+          // send an embed message with the collection name in the title, the banner image, and floor price
+          const embed = {
+            title: `${name}`,
+            author: {
+              name: "AlphaKing",
+            },
+            description: "Showing profit/loss information",
+            image: {
+              url: banner_image_url,
+            },
+            fields: [
+              {
+                name: "Floor Price",
+                value: `\`${floorPrice} ETH\``,
+                inline: false,
               },
-            };
-            const floorPriceResponse = await axios(floorPriceOptions);
-            const floorPrice = floorPriceResponse.data.floor_price.quantity;
-        
-            // send an embed message with the collection name in the title, the banner image, and floor price
-            const embed = {
-              title: `${name}`,
-              author: {
-                name: "AlphaKing",
+              {
+                name: "Links",
+                value: `[opensea](${openseaUrl}) ⎔ [looksrare](${looksrareUrl}) ⎔ [blur](${blurUrl}) ⎔ [x2y2](${x2y2Url}) ⎔ [website](${openseaExternalUrl}) ⎔ [discord](${openseaDiscordUrl})`,
+                inline: true,
               },
-              description: "Showing profit/loss information",
-              image: {
-                url: banner_image_url,
-              },
-              fields: [
-                {
-                  name: "Floor Price",
-                  value: `${floorPrice} ETH`,
-                  inline: false,
-                },
-                {
-                  name: "Links",
-                  value: `[opensea](${openseaUrl}) ⎔ [looksrare](${looksrareUrl}) ⎔ [blur](${blurUrl}) ⎔ [x2y2](${x2y2Url}) ⎔ [website](${openseaExternalUrl}) ⎔ [discord](${openseaDiscordUrl})`,
-                  inline: true,
-                },
-              ],
-            };
-            await interaction.reply({ embeds: [embed] });
-          } catch (error) {
-            console.error(error);
-            await interaction.reply(`Error: ${error.response.data.message}`);
-          }
-          break;
-        
+            ],
+          };
+          // edit the loading message with the actual data
+          await loadingMessage.edit({ embeds: [embed] });
+        } catch (error) {
+          console.error(error);
+        }
+        break;
 
       default:
         break;
