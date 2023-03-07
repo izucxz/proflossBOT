@@ -268,7 +268,7 @@ client.on("interactionCreate", async (interaction) => {
           const loadingEmbed = {
             title: "Collection Name",
             author: {
-              name: " ",
+              name: "Alpha King",
             },
             description: "Showing profit/loss information",
             fields: [
