@@ -220,7 +220,7 @@ client.on("interactionCreate", async (interaction) => {
         let embed = {
           color: 0xff0000,
           author: {
-            name: ` `,
+            name: `Alpha King`,
           },
           title: "Wallet Manager",
         };
@@ -266,9 +266,11 @@ client.on("interactionCreate", async (interaction) => {
 
           // send an initial "loading" message
           const loadingEmbed = {
+            color: 0xFFA07A,
             title: "Collection Name",
             author: {
               name: "Alpha King",
+              icon_url: `https://media.discordapp.net/attachments/1070244170196865086/1082636910205337700/AlphaKing.jpg`,
             },
             description: "Showing profit/loss information",
             fields: [
@@ -318,9 +320,11 @@ client.on("interactionCreate", async (interaction) => {
 
           // send an embed message with the collection name in the title, the banner image, and floor price
           const embed = {
+            color: 0xFFA07A,
             title: `${name}`,
             author: {
               name: "Alpha King",
+              icon_url: `https://media.discordapp.net/attachments/1070244170196865086/1082636910205337700/AlphaKing.jpg`,
             },
             description: "Showing profit/loss information",
             image: {
