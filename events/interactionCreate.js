@@ -42,6 +42,9 @@ client.on("interactionCreate", async (interaction) => {
             await interaction.reply({
               embeds: [
                 {
+                  author: {
+                    name: `Alpha King`,
+                  },
                   title: "⛽ Current gas prices",
                   fields: [
                     {
@@ -79,6 +82,9 @@ client.on("interactionCreate", async (interaction) => {
           await interaction.reply({
             embeds: [
               {
+                author: {
+                  name: `Alpha King`,
+                },
                 title: "💸 Current ethereum price",
                 description: `$${ethPrice} USD`,
                 color: 0x1e90ff,
@@ -392,7 +398,7 @@ client.on("interactionCreate", async (interaction) => {
           let embed = {
             color: 0xff0000,
             author: {
-              name: ` `,
+              name: `Alpha King`,
             },
             title: "Wallet Manager",
             description: "No saved wallet",
@@ -407,7 +413,7 @@ client.on("interactionCreate", async (interaction) => {
           let embed = {
             color: 0xff0000,
             author: {
-              name: ` `,
+              name: `Alpha King`,
             },
             title: "Wallet Manager",
             fields: [
@@ -448,7 +454,7 @@ client.on("interactionCreate", async (interaction) => {
         let embed = {
           color: 0xff0000,
           author: {
-            name: ` `,
+            name: `Alpha King`,
           },
           title: "Wallet Manager",
           fields: [
