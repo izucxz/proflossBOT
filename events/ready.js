@@ -51,7 +51,7 @@ client.on("ready", () => {
     },
     {
       name: 'wallet',
-      description: 'View your saved Ethereum addresses',
+      description: 'Manage your saved Ethereum addresses',
       type: ApplicationCommandType.ChatInput,
     },
     {
