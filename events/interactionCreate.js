@@ -196,50 +196,60 @@ client.on("interactionCreate", async (interaction) => {
         }
         break;
 
-      case "wallet":
-        const user = interaction.user;
-        const savedAddress = savedAddresses.get(user.id);
-
-        const row = new ActionRowBuilder().addComponents(
-          new ButtonBuilder()
-            .setCustomId("delete_wallet")
-            .setLabel("❎ Delete")
-            .setStyle("Secondary"),
-          new ButtonBuilder()
-            .setCustomId("refresh_wallet")
-            .setLabel("🔄 Refresh")
-            .setStyle("Secondary"),
-          new ButtonBuilder()
-            .setCustomId("balance")
-            .setLabel("🏧 Balance")
-            .setStyle("Secondary")
-        );
-
-        let embed = {
-          color: 0xff0000,
-          author: {
-            name: `Alpha King`,
-          },
-          title: "Wallet Manager",
-        };
-
-        if (savedAddress) {
-          embed.fields = savedAddress.map((address, index) => {
-            return {
-              name: " ",
-              value: `\`${index + 1}. ${address}\``,
-            };
+        case "wallet":
+          const user = interaction.user;
+          const savedAddress = savedAddresses.get(user.id);
+        
+          const row = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
+              .setCustomId("delete_wallet")
+              .setLabel("❎ Delete")
+              .setStyle("Secondary"),
+            new ButtonBuilder()
+              .setCustomId("refresh_wallet")
+              .setLabel("🔄 Refresh")
+              .setStyle("Secondary"),
+            new ButtonBuilder()
+              .setCustomId("balance")
+              .setLabel("🏧 Balance")
+              .setStyle("Secondary")
+          );
+        
+          let embed = {
+            color: 0xff0000,
+            author: {
+              name: `Alpha King`,
+            },
+            title: "Wallet Manager",
+            fields: [
+              {
+                name: "Total Wallets",
+                value: savedAddress ? savedAddress.length.toString() : "0",
+                inline: true,
+              },
+            ],
+          };
+        
+          if (savedAddress) {
+            embed.fields.push(
+              ...savedAddress.map((address, index) => {
+                return {
+                  name: " ",
+                  value: `\`${index + 1}. ${address}\``,
+                };
+              })
+            );
+          } else {
+            embed.description = "No saved wallet";
+          }
+        
+          await interaction.reply({
+            embeds: [embed],
+            components: [row],
+            ephemeral: true,
           });
-        } else {
-          embed.description = "No saved wallet";
-        }
-
-        await interaction.reply({
-          embeds: [embed],
-          components: [row],
-          ephemeral: true,
-        });
-        break;
+          break;
+        
 
       case "profit":
         const interactionUser = interaction.user;
