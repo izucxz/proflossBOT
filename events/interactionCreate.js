@@ -249,7 +249,6 @@ client.on("interactionCreate", async (interaction) => {
             ephemeral: true,
           });
           break;
-        
 
       case "profit":
         const interactionUser = interaction.user;
