@@ -220,8 +220,12 @@ client.on("interactionCreate", async (interaction) => {
             author: {
               name: `Alpha King`,
             },
-            title: "Wallet Manager",
             fields: [
+              {
+                name: "Wallet Manager",
+                value: " ",
+                inline: true,
+              },
               {
                 name: "Total Wallets",
                 value: savedAddress ? savedAddress.length.toString() : "0",
@@ -239,8 +243,6 @@ client.on("interactionCreate", async (interaction) => {
                 };
               })
             );
-          } else {
-            embed.description = "No saved wallet";
           }
         
           await interaction.reply({
@@ -416,24 +418,33 @@ client.on("interactionCreate", async (interaction) => {
         });
         break;
 
-      case "refresh_wallet":
+        case "refresh_wallet":
           // Get the saved Ethereum addresses for the user
           const user = interaction.user;
           const savedAddressesArray = savedAddresses.get(user.id) || [];
+          
+          const totalWallets = savedAddressesArray.length;
         
-          if (savedAddressesArray.length > 0) {
+          if (totalWallets > 0) {
             const embed = {
               color: 0xff0000,
               author: {
                 name: `Alpha King`,
               },
               title: "Wallet Manager",
-              fields: savedAddressesArray.map((address, index) => ({
-                name: " ",
-                value: `\`${index + 1}. ${address}\``,
-              })),
+              fields: [
+                {
+                  name: "Total Wallets",
+                  value: savedAddress ? savedAddress.length.toString() : "0",
+                  inline: true,
+                },
+                ...savedAddressesArray.map((address, index) => ({
+                  name: " ",
+                  value: `\`${index + 1}. ${address}\``,
+                })),
+              ],
             };
-        
+          
             await interaction.update({
               embeds: [embed],
               ephemeral: true,
@@ -444,16 +455,27 @@ client.on("interactionCreate", async (interaction) => {
               author: {
                 name: `Alpha King`,
               },
-              title: "Wallet Manager",
-              description: "No saved wallet",
+              fields: [
+                {
+                  name: "Wallet Manager",
+                  value: " ",
+                  inline: true,
+                },
+                {
+                  name: "Total Wallets",
+                  value: savedAddress ? savedAddress.length.toString() : "0",
+                  inline: true,
+                },
+              ],
             };
-        
+          
             await interaction.update({
               embeds: [embed],
               ephemeral: true,
             });
           }
-          break;        
+          break;
+                
 
       case "balance":
         // Get the saved Ethereum address for the user
