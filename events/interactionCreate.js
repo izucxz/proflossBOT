@@ -250,6 +250,15 @@ client.on("interactionCreate", async (interaction) => {
         break;
 
       case "profit":
+        const interactionUser = interaction.user;
+        const savedAddressProfit = savedAddresses.get(interactionUser.id);
+        if (!savedAddressProfit) {
+          await interaction.reply({
+            content: "Save your Ethereum address first using `/wallet`",
+            ephemeral: true,
+          });
+          return;
+        }
         const contractAddress = options.getString("contract_address");
         const requestOptions = {
           method: "GET",
@@ -272,7 +281,7 @@ client.on("interactionCreate", async (interaction) => {
 
           // send an initial "loading" message
           const loadingEmbed = {
-            color: 0xFFA07A,
+            color: 0xffa07a,
             title: "Collection Name",
             author: {
               name: "Alpha King",
@@ -326,7 +335,7 @@ client.on("interactionCreate", async (interaction) => {
 
           // send an embed message with the collection name in the title, the banner image, and floor price
           const embed = {
-            color: 0xFFA07A,
+            color: 0xffa07a,
             title: `${name}`,
             author: {
               name: "Alpha King",
