@@ -274,7 +274,7 @@ client.on("interactionCreate", async (interaction) => {
         try {
           if (interaction.deferred || interaction.replied) {
             return;
-          }
+          }         
 
           // defer the interaction before processing the request
           await interaction.deferReply();
@@ -360,9 +360,17 @@ client.on("interactionCreate", async (interaction) => {
           };
           // edit the loading message with the actual data
           await loadingMessage.edit({ embeds: [embed] });
-        } catch (error) {
-          console.error(error);
-        }
+          
+            // code to make API request
+          } catch (error) {
+            console.error(error);
+            if (error.response && error.response.status === 404) {
+              await interaction.editReply({
+                content: "***Invalid contract address.***",
+                ephemeral: true,
+              });
+            }
+          }
         break;
 
       default:
