@@ -418,7 +418,7 @@ client.on("interactionCreate", async (interaction) => {
         });
         break;
 
-        case "refresh_wallet":
+      case "refresh_wallet":
           // Get the saved Ethereum addresses for the user
           const user = interaction.user;
           const savedAddressesArray = savedAddresses.get(user.id) || [];
