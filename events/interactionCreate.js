@@ -359,8 +359,7 @@ client.on("interactionCreate", async (interaction) => {
             ],
           };
           // edit the loading message with the actual data
-          await loadingMessage.edit({ embeds: [embed] });
-          
+          await loadingMessage.edit({ embeds: [embed] });          
             // code to make API request
           } catch (error) {
             console.error(error);
