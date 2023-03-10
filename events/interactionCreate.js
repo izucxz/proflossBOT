@@ -196,7 +196,7 @@ client.on("interactionCreate", async (interaction) => {
         }
         break;
 
-        case "wallet":
+      case "wallet":
           const user = interaction.user;
           const savedAddress = savedAddresses.get(user.id);
         
