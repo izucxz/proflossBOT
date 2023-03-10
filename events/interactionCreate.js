@@ -431,11 +431,15 @@ client.on("interactionCreate", async (interaction) => {
               author: {
                 name: `Alpha King`,
               },
-              title: "Wallet Manager",
               fields: [
                 {
+                  name: "Wallet Manager",
+                  value: " ",
+                  inline: true,
+                },
+                {
                   name: "Total Wallets",
-                  value: savedAddress ? savedAddress.length.toString() : "0",
+                  value: totalWallets.toString(),
                   inline: true,
                 },
                 ...savedAddressesArray.map((address, index) => ({
