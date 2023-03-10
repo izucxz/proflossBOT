@@ -254,7 +254,7 @@ client.on("interactionCreate", async (interaction) => {
         const savedAddressProfit = savedAddresses.get(interactionUser.id);
         if (!savedAddressProfit) {
           await interaction.reply({
-            content: "Save your Ethereum address first using `/wallet`",
+            content: "Save your Ethereum address first, using `/wallet_add`",
             ephemeral: true,
           });
           return;
