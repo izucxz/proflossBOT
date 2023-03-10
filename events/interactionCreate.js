@@ -227,7 +227,7 @@ client.on("interactionCreate", async (interaction) => {
       embed.fields = savedAddress.map((address, index) => {
         return {
           name: " ",
-          value: `\`${index + 1}: ${address}\``,
+          value: `\`${index + 1}. ${address}\``,
         };
       });
     } else {
