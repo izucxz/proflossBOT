@@ -365,11 +365,17 @@ client.on("interactionCreate", async (interaction) => {
           } catch (error) {
             console.error(error);
             if (error.response && error.response.status === 404) {
-              await interaction.editReply({
-                content: "***Invalid contract address.***",
-                ephemeral: true,
-              });
-            }
+              const errorEmbed = {
+                color: 0xffa07a,
+                title: "Invalid collection",
+                author: {
+                  name: "Alpha King",
+                  icon_url: `https://media.discordapp.net/attachments/1070244170196865086/1082636910205337700/AlphaKing.jpg`,
+                },
+                description: "Please provide a valid contract address.",
+              };
+              await interaction.editReply({ embeds: [errorEmbed], ephemeral: true });
+            }            
           }
         break;
 
