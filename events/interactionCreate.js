@@ -162,85 +162,84 @@ client.on("interactionCreate", async (interaction) => {
       }
 
       case "wallet_add":
-  // Check if the user has specified the 'add' option
-  const addOption = options.get("address");
-  if (addOption) {
-    const user = interaction.user;
-    const address = addOption.value;
+        // Check if the user has specified the 'add' option
+        const addOption = options.get("address");
+        if (addOption) {
+          const user = interaction.user;
+          const address = addOption.value;
 
-    // Check if the provided Ethereum address is valid
-    const web3 = new Web3("https://mainnet.infura.io/v3/your_project_id");
-    if (!web3.utils.isAddress(address)) {
-      await interaction.reply({
-        content: "Please provide a valid Ethereum address.",
-        ephemeral: true,
-      });
-      return;
-    }
+          // Check if the provided Ethereum address is valid
+          const web3 = new Web3("https://mainnet.infura.io/v3/your_project_id");
+          if (!web3.utils.isAddress(address)) {
+            await interaction.reply({
+              content: "Please provide a valid Ethereum address.",
+              ephemeral: true,
+            });
+            return;
+          }
 
-    // Add the new address to the user's list of saved addresses
-    let savedAddressesArray = savedAddresses.get(user.id) || [];
-    if (savedAddressesArray.includes(address)) {
-      await interaction.reply({
-        content: "You have already saved this Ethereum address.",
-        ephemeral: true,
-      });
-    } else {
-      savedAddressesArray.push(address);
-      savedAddresses.set(user.id, savedAddressesArray);
-      await interaction.reply({
-        content: `Ethereum address ${address} has been saved.`,
-        ephemeral: true,
-      });
-    }
-  }
-  break;
+          // Add the new address to the user's list of saved addresses
+          let savedAddressesArray = savedAddresses.get(user.id) || [];
+          if (savedAddressesArray.includes(address)) {
+            await interaction.reply({
+              content: "You have already saved this Ethereum address.",
+              ephemeral: true,
+            });
+          } else {
+            savedAddressesArray.push(address);
+            savedAddresses.set(user.id, savedAddressesArray);
+            await interaction.reply({
+              content: `Ethereum address ${address} has been saved.`,
+              ephemeral: true,
+            });
+          }
+        }
+        break;
 
-  case "wallet":
-    const user = interaction.user;
-    const savedAddress = savedAddresses.get(user.id);
-  
-    const row = new ActionRowBuilder().addComponents(
-      new ButtonBuilder()
-        .setCustomId("delete_wallet")
-        .setLabel("❎ Delete")
-        .setStyle("Secondary"),
-      new ButtonBuilder()
-        .setCustomId("refresh_wallet")
-        .setLabel("🔄 Refresh")
-        .setStyle("Secondary"),
-      new ButtonBuilder()
-        .setCustomId("balance")
-        .setLabel("🏧 Balance")
-        .setStyle("Secondary")
-    );
-  
-    let embed = {
-      color: 0xff0000,
-      author: {
-        name: `Alpha King`,
-      },
-      title: "Wallet Manager",
-    };
-  
-    if (savedAddress) {
-      embed.fields = savedAddress.map((address, index) => {
-        return {
-          name: " ",
-          value: `\`${index + 1}. ${address}\``,
+      case "wallet":
+        const user = interaction.user;
+        const savedAddress = savedAddresses.get(user.id);
+
+        const row = new ActionRowBuilder().addComponents(
+          new ButtonBuilder()
+            .setCustomId("delete_wallet")
+            .setLabel("❎ Delete")
+            .setStyle("Secondary"),
+          new ButtonBuilder()
+            .setCustomId("refresh_wallet")
+            .setLabel("🔄 Refresh")
+            .setStyle("Secondary"),
+          new ButtonBuilder()
+            .setCustomId("balance")
+            .setLabel("🏧 Balance")
+            .setStyle("Secondary")
+        );
+
+        let embed = {
+          color: 0xff0000,
+          author: {
+            name: `Alpha King`,
+          },
+          title: "Wallet Manager",
         };
-      });
-    } else {
-      embed.description = "No saved wallet";
-    }
-  
-    await interaction.reply({
-      embeds: [embed],
-      components: [row],
-      ephemeral: true,
-    });
-    break;
-  
+
+        if (savedAddress) {
+          embed.fields = savedAddress.map((address, index) => {
+            return {
+              name: " ",
+              value: `\`${index + 1}. ${address}\``,
+            };
+          });
+        } else {
+          embed.description = "No saved wallet";
+        }
+
+        await interaction.reply({
+          embeds: [embed],
+          components: [row],
+          ephemeral: true,
+        });
+        break;
 
       case "profit":
         const interactionUser = interaction.user;
@@ -267,7 +266,7 @@ client.on("interactionCreate", async (interaction) => {
         try {
           if (interaction.deferred || interaction.replied) {
             return;
-          }         
+          }
 
           // defer the interaction before processing the request
           await interaction.deferReply();
@@ -352,23 +351,26 @@ client.on("interactionCreate", async (interaction) => {
             ],
           };
           // edit the loading message with the actual data
-          await loadingMessage.edit({ embeds: [embed] });          
-            // code to make API request
-          } catch (error) {
-            console.error(error);
-            if (error.response && error.response.status === 404) {
-              const errorEmbed = {
-                color: 0xffa07a,
-                title: "Invalid collection",
-                author: {
-                  name: "Alpha King",
-                  icon_url: `https://media.discordapp.net/attachments/1070244170196865086/1082636910205337700/AlphaKing.jpg`,
-                },
-                description: "Please provide a valid contract address.",
-              };
-              await interaction.editReply({ embeds: [errorEmbed], ephemeral: true });
-            }            
+          await loadingMessage.edit({ embeds: [embed] });
+          // code to make API request
+        } catch (error) {
+          console.error(error);
+          if (error.response && error.response.status === 404) {
+            const errorEmbed = {
+              color: 0xffa07a,
+              title: "Invalid collection",
+              author: {
+                name: "Alpha King",
+                icon_url: `https://media.discordapp.net/attachments/1070244170196865086/1082636910205337700/AlphaKing.jpg`,
+              },
+              description: "Please provide a valid contract address.",
+            };
+            await interaction.editReply({
+              embeds: [errorEmbed],
+              ephemeral: true,
+            });
           }
+        }
         break;
 
       default:
