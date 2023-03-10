@@ -162,47 +162,39 @@ client.on("interactionCreate", async (interaction) => {
       }
 
       case "wallet_add":
-        // Check if the user has specified the 'add' option
-        const addOption = options.get("address");
-        if (addOption) {
-          const user = interaction.user;
-          const address = addOption.value;
+  // Check if the user has specified the 'add' option
+  const addOption = options.get("address");
+  if (addOption) {
+    const user = interaction.user;
+    const address = addOption.value;
 
-          // Check if the provided Ethereum address is valid
-          const web3 = new Web3("https://mainnet.infura.io/v3/your_project_id");
-          if (!web3.utils.isAddress(address)) {
-            await interaction.reply({
-              content: "Please provide a valid Ethereum address.",
-              ephemeral: true,
-            });
-            return;
-          }
+    // Check if the provided Ethereum address is valid
+    const web3 = new Web3("https://mainnet.infura.io/v3/your_project_id");
+    if (!web3.utils.isAddress(address)) {
+      await interaction.reply({
+        content: "Please provide a valid Ethereum address.",
+        ephemeral: true,
+      });
+      return;
+    }
 
-          // Check if the user has already saved an Ethereum address
-          const savedAddress = savedAddresses.get(user.id);
-          if (savedAddress) {
-            await interaction.reply({
-              content:
-                "You have already saved an Ethereum address. You cannot save another one.",
-              ephemeral: true,
-            });
-            return;
-          }
-
-          // Save the user's Ethereum address
-          savedAddresses.set(user.id, address);
-
-          await interaction.reply({
-            content: `Your Ethereum address \`${address}\` has been saved.`,
-            ephemeral: true,
-          });
-        } else {
-          await interaction.reply({
-            content:
-              "Please provide an Ethereum address using the `/wallet_add` command with the `add` option. Example usage: `/wallet_add add 0x123abc...`",
-          });
-        }
-        break;
+    // Add the new address to the user's list of saved addresses
+    let savedAddressesArray = savedAddresses.get(user.id) || [];
+    if (savedAddressesArray.includes(address)) {
+      await interaction.reply({
+        content: "You have already saved this Ethereum address.",
+        ephemeral: true,
+      });
+    } else {
+      savedAddressesArray.push(address);
+      savedAddresses.set(user.id, savedAddressesArray);
+      await interaction.reply({
+        content: `Ethereum address ${address} has been saved.`,
+        ephemeral: true,
+      });
+    }
+  }
+  break;
 
       case "wallet":
         const user = interaction.user;
