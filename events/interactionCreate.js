@@ -407,46 +407,44 @@ client.on("interactionCreate", async (interaction) => {
         });
         break;
 
-      case "refresh_wallet":
-        // Get the saved Ethereum address for the user
-        savedAddress = savedAddresses.get(user.id);
-        if (!savedAddress) {
-          // If there's no saved Ethereum address, update the embed to show "No saved wallet"
-          let embed = {
-            color: 0xff0000,
-            author: {
-              name: `Alpha King`,
-            },
-            title: "Wallet Manager",
-            description: "No saved wallet",
-          };
-
-          await interaction.update({
-            embeds: [embed],
-            ephemeral: true,
-          });
-        } else {
-          // If there's a saved Ethereum address, update the embed with the saved address
-          let embed = {
-            color: 0xff0000,
-            author: {
-              name: `Alpha King`,
-            },
-            title: "Wallet Manager",
-            fields: [
-              {
-                name: " ",
-                value: `\`${savedAddress}\``,
+        case "refresh_wallet":
+          // Get the saved Ethereum addresses for the user
+          const user = interaction.user;
+          const savedAddressesArray = savedAddresses.get(user.id) || [];
+        
+          if (savedAddressesArray.length > 0) {
+            const embed = {
+              color: 0xff0000,
+              author: {
+                name: `Alpha King`,
               },
-            ],
-          };
-
-          await interaction.update({
-            embeds: [embed],
-            ephemeral: true,
-          });
-        }
-        break;
+              title: "Wallet Manager",
+              fields: savedAddressesArray.map((address, index) => ({
+                name: " ",
+                value: `\`${index + 1}. ${address}\``,
+              })),
+            };
+        
+            await interaction.update({
+              embeds: [embed],
+              ephemeral: true,
+            });
+          } else {
+            const embed = {
+              color: 0xff0000,
+              author: {
+                name: `Alpha King`,
+              },
+              title: "Wallet Manager",
+              description: "No saved wallet",
+            };
+        
+            await interaction.update({
+              embeds: [embed],
+              ephemeral: true,
+            });
+          }
+          break;        
 
       case "balance":
         // Get the saved Ethereum address for the user
