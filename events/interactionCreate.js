@@ -537,3 +537,23 @@ client.on("interactionCreate", async (interaction) => {
     }
   }
 });
+
+
+client.on(Events.InteractionCreate, async interaction => {
+	if (!interaction.isModalSubmit()) return;
+  const user = interaction.user;
+
+    // Declare savedAddress variable here
+    let savedAddress;
+	if (interaction.customId === 'myModal') {
+		// Check if the user has already saved an Ethereum address
+    savedAddress = savedAddresses.get(user.id);
+    // Delete the saved Ethereum address for the user
+    savedAddresses.delete(user.id);
+
+    await interaction.reply({
+      content: "The address has been deleted.",
+      ephemeral: true,
+    });
+	}
+});
