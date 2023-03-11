@@ -228,7 +228,7 @@ client.on("interactionCreate", async (interaction) => {
               },
               {
                 name: "Total Wallets",
-                value: savedAddress ? savedAddress.length.toString() : "0",
+                value: `\`${savedAddress ? savedAddress.length.toString() : "0"}\``,
                 inline: true,
               },
             ],
@@ -439,7 +439,7 @@ client.on("interactionCreate", async (interaction) => {
                 },
                 {
                   name: "Total Wallets",
-                  value: totalWallets.toString(),
+                  value: `\`${totalWallets.toString()}\``,
                   inline: true,
                 },
                 ...savedAddressesArray.map((address, index) => ({
@@ -467,7 +467,7 @@ client.on("interactionCreate", async (interaction) => {
                 },
                 {
                   name: "Total Wallets",
-                  value: savedAddress ? savedAddress.length.toString() : "0",
+                  value: `\`${savedAddress ? savedAddress.length.toString() : "0"}\``,
                   inline: true,
                 },
               ],
