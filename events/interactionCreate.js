@@ -197,60 +197,62 @@ client.on("interactionCreate", async (interaction) => {
         break;
 
       case "wallet":
-          const user = interaction.user;
-          const savedAddress = savedAddresses.get(user.id);
-        
-          const row = new ActionRowBuilder().addComponents(
-            new ButtonBuilder()
-              .setCustomId("delete_wallet")
-              .setLabel("❎ Delete")
-              .setStyle("Secondary"),
-            new ButtonBuilder()
-              .setCustomId("refresh_wallet")
-              .setLabel("🔄 Refresh")
-              .setStyle("Secondary"),
-            new ButtonBuilder()
-              .setCustomId("balance")
-              .setLabel("🏧 Balance")
-              .setStyle("Secondary")
-          );
-        
-          let embed = {
-            color: 0xff0000,
-            author: {
-              name: `Alpha King`,
+        const user = interaction.user;
+        const savedAddress = savedAddresses.get(user.id);
+
+        const row = new ActionRowBuilder().addComponents(
+          new ButtonBuilder()
+            .setCustomId("delete_wallet")
+            .setLabel("❎ Delete")
+            .setStyle("Secondary"),
+          new ButtonBuilder()
+            .setCustomId("refresh_wallet")
+            .setLabel("🔄 Refresh")
+            .setStyle("Secondary"),
+          new ButtonBuilder()
+            .setCustomId("balance")
+            .setLabel("🏧 Balance")
+            .setStyle("Secondary")
+        );
+
+        let embed = {
+          color: 0xff0000,
+          author: {
+            name: `Alpha King`,
+          },
+          fields: [
+            {
+              name: "Wallet Manager",
+              value: " ",
+              inline: true,
             },
-            fields: [
-              {
-                name: "Wallet Manager",
-                value: " ",
-                inline: true,
-              },
-              {
-                name: "Total Wallets",
-                value: `\`${savedAddress ? savedAddress.length.toString() : "0"}\``,
-                inline: true,
-              },
-            ],
-          };
-        
-          if (savedAddress) {
-            embed.fields.push(
-              ...savedAddress.map((address, index) => {
-                return {
-                  name: " ",
-                  value: `\`${index + 1}. ${address}\``,
-                };
-              })
-            );
-          }
-        
-          await interaction.reply({
-            embeds: [embed],
-            components: [row],
-            ephemeral: true,
-          });
-          break;
+            {
+              name: "Total Wallets",
+              value: `\`${
+                savedAddress ? savedAddress.length.toString() : "0"
+              }\``,
+              inline: true,
+            },
+          ],
+        };
+
+        if (savedAddress) {
+          embed.fields.push(
+            ...savedAddress.map((address, index) => {
+              return {
+                name: " ",
+                value: `\`${index + 1}. ${address}\``,
+              };
+            })
+          );
+        }
+
+        await interaction.reply({
+          embeds: [embed],
+          components: [row],
+          ephemeral: true,
+        });
+        break;
 
       case "profit":
         const interactionUser = interaction.user;
@@ -398,88 +400,96 @@ client.on("interactionCreate", async (interaction) => {
     let savedAddress;
 
     switch (interaction.customId) {
-      
       case "delete_wallet":
-        // Check if the user has already saved an Ethereum address
-        savedAddress = savedAddresses.get(user.id);
-        if (!savedAddress) {
-          await interaction.reply({
-            content: "You have not saved any Ethereum address.",
-            ephemeral: true,
-          });
-          return;
-        }
+        const modal = new ModalBuilder()
+          .setCustomId("myModal")
+          .setTitle("Delete Wallet");
 
-        // Delete the saved Ethereum address for the user
-        savedAddresses.delete(user.id);
+        // Add components to modal
 
-        await interaction.reply({
-          content: "The address has been deleted.",
-          ephemeral: true,
-        });
+        // Create the text input components
+        const addressInput = new TextInputBuilder()
+          .setCustomId("addressInput")
+          .setLabel("Delete your ethereum address")
+          // Paragraph means multiple lines of text.
+          .setStyle(TextInputStyle.Paragraph);
+
+        // An action row only holds one text input,
+        const firstActionRow = new ActionRowBuilder().addComponents(
+          addressInput
+        );
+
+        // Add inputs to the modal
+        modal.addComponents(firstActionRow);
+
+        // Show the modal to the user
+        await interaction.showModal(modal);
+
         break;
 
       case "refresh_wallet":
-          // Get the saved Ethereum addresses for the user
-          const user = interaction.user;
-          const savedAddressesArray = savedAddresses.get(user.id) || [];
-          
-          const totalWallets = savedAddressesArray.length;
-        
-          if (totalWallets > 0) {
-            const embed = {
-              color: 0xff0000,
-              author: {
-                name: `Alpha King`,
+        // Get the saved Ethereum addresses for the user
+        const user = interaction.user;
+        const savedAddressesArray = savedAddresses.get(user.id) || [];
+
+        const totalWallets = savedAddressesArray.length;
+
+        if (totalWallets > 0) {
+          const embed = {
+            color: 0xff0000,
+            author: {
+              name: `Alpha King`,
+            },
+            fields: [
+              {
+                name: "Wallet Manager",
+                value: " ",
+                inline: true,
               },
-              fields: [
-                {
-                  name: "Wallet Manager",
-                  value: " ",
-                  inline: true,
-                },
-                {
-                  name: "Total Wallets",
-                  value: `\`${totalWallets.toString()}\``,
-                  inline: true,
-                },
-                ...savedAddressesArray.map((address, index) => ({
-                  name: " ",
-                  value: `\`${index + 1}. ${address}\``,
-                })),
-              ],
-            };
-          
-            await interaction.update({
-              embeds: [embed],
-              ephemeral: true,
-            });
-          } else {
-            const embed = {
-              color: 0xff0000,
-              author: {
-                name: `Alpha King`,
+              {
+                name: "Total Wallets",
+                value: `\`${totalWallets.toString()}\``,
+                inline: true,
               },
-              fields: [
-                {
-                  name: "Wallet Manager",
-                  value: " ",
-                  inline: true,
-                },
-                {
-                  name: "Total Wallets",
-                  value: `\`${savedAddress ? savedAddress.length.toString() : "0"}\``,
-                  inline: true,
-                },
-              ],
-            };
-          
-            await interaction.update({
-              embeds: [embed],
-              ephemeral: true,
-            });
-          }
-          break;          
+              ...savedAddressesArray.map((address, index) => ({
+                name: " ",
+                value: `\`${index + 1}. ${address}\``,
+              })),
+            ],
+          };
+
+          await interaction.update({
+            embeds: [embed],
+            ephemeral: true,
+          });
+        } else {
+          const embed = {
+            color: 0xff0000,
+            author: {
+              name: `Alpha King`,
+            },
+            fields: [
+              {
+                name: "Wallet Manager",
+                value: " ",
+                inline: true,
+              },
+              {
+                name: "Total Wallets",
+                value: `\`${
+                  savedAddress ? savedAddress.length.toString() : "0"
+                }\``,
+                inline: true,
+              },
+            ],
+          };
+
+          await interaction.update({
+            embeds: [embed],
+            ephemeral: true,
+          });
+        }
+        break;
 
       case "balance":
         // Get the saved Ethereum address for the user
