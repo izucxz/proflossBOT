@@ -478,8 +478,7 @@ client.on("interactionCreate", async (interaction) => {
               ephemeral: true,
             });
           }
-          break;
-                
+          break;          
 
       case "balance":
         // Get the saved Ethereum address for the user
