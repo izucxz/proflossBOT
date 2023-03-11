@@ -398,6 +398,7 @@ client.on("interactionCreate", async (interaction) => {
     let savedAddress;
 
     switch (interaction.customId) {
+      
       case "delete_wallet":
         // Check if the user has already saved an Ethereum address
         savedAddress = savedAddresses.get(user.id);
