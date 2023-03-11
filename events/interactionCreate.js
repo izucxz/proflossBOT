@@ -410,7 +410,8 @@ client.on("interactionCreate", async (interaction) => {
         // Create the text input components
         const addressInput = new TextInputBuilder()
           .setCustomId("addressInput")
-          .setLabel("Delete your ethereum address")
+          .setLabel("Enter the Ethereum address to delete")
+          .setPlaceholder("0x123...")
           // Paragraph means multiple lines of text.
           .setStyle(TextInputStyle.Paragraph);
 
