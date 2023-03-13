@@ -202,17 +202,17 @@ client.on("interactionCreate", async (interaction) => {
 
         const row = new ActionRowBuilder().addComponents(
           new ButtonBuilder()
-            .setCustomId("delete_wallet")
-            .setLabel("❎ Delete")
-            .setStyle("Secondary"),
-          new ButtonBuilder()
             .setCustomId("refresh_wallet")
             .setLabel("🔄 Refresh")
             .setStyle("Secondary"),
           new ButtonBuilder()
             .setCustomId("balance")
             .setLabel("🏧 Balance")
-            .setStyle("Secondary")
+            .setStyle("Secondary"),
+            new ButtonBuilder()
+            .setCustomId("reset_wallet")
+            .setLabel("❎ Reset")
+            .setStyle("Danger")
         );
 
         let embed = {
@@ -400,7 +400,7 @@ client.on("interactionCreate", async (interaction) => {
     let savedAddress;
 
     switch (interaction.customId) {
-      case "delete_wallet":
+      case "reset_wallet":
         // Check if the user has already saved an Ethereum address
         savedAddress = savedAddresses.get(user.id);
         if (!savedAddress) {
@@ -415,7 +415,7 @@ client.on("interactionCreate", async (interaction) => {
         savedAddresses.delete(user.id);
 
         await interaction.reply({
-          content: "The address has been deleted.",
+          content: "Wallet has been reset.",
           ephemeral: true,
         });
         break;
