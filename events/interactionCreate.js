@@ -204,15 +204,15 @@ client.on("interactionCreate", async (interaction) => {
             new ButtonBuilder()
               .setCustomId("left_page")
               .setLabel("◀")
-              .setStyle("Secondary"),
+              .setStyle("Primary"),
             new ButtonBuilder()
               .setCustomId("right_page")
               .setLabel("▶")
-              .setStyle("Secondary"),
+              .setStyle("Primary"),
             new ButtonBuilder()
               .setCustomId("refresh_wallet")
               .setLabel("🔄")
-              .setStyle("Secondary"),
+              .setStyle("Primary"),
             new ButtonBuilder()
               .setCustomId("reset_wallet")
               .setLabel("❎ Reset")
