@@ -203,7 +203,7 @@ client.on("interactionCreate", async (interaction) => {
         const row = new ActionRowBuilder().addComponents(
           new ButtonBuilder()
             .setCustomId("delete_wallet")
-            .setLabel("❎ Reset")
+            .setLabel("❎ Delete")
             .setStyle("Secondary"),
           new ButtonBuilder()
             .setCustomId("refresh_wallet")
