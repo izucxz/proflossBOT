@@ -492,7 +492,6 @@ client.on("interactionCreate", async (interaction) => {
         }
         break;
 
-      case "balance":
         // Get the saved Ethereum address for the user
         savedAddress = savedAddresses.get(user.id);
         if (!savedAddress) {
