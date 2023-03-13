@@ -400,15 +400,15 @@ client.on("interactionCreate", async (interaction) => {
       case "reset_wallet":
         const modal = new ModalBuilder()
           .setCustomId("myModal")
-          .setTitle("Delete Wallet");
+          .setTitle("Reset Wallet");
 
         // Add components to modal
 
         // Create the text input components
         const addressInput = new TextInputBuilder()
           .setCustomId("addressInput")
-          .setLabel("Delete saved eth address")
-          .setPlaceholder("0x123")
+          .setLabel("Delete all saved eth address")
+          .setPlaceholder("yes")
           // Paragraph means multiple lines of text.
           .setStyle(TextInputStyle.Paragraph);
 
