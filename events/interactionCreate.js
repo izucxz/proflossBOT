@@ -481,50 +481,6 @@ client.on("interactionCreate", async (interaction) => {
           });
         }
         break;
-    
-      case "balance":
-          // Get the saved Ethereum address for the user
-          savedAddress = savedAddresses.get(user.id);
-          if (!savedAddress) {
-            // If there's no saved Ethereum address, send an error message
-            await interaction.reply({
-              content: "You have not saved any Ethereum address.",
-              ephemeral: true,
-            });
-            return;
-          }
-  
-          // Get the balance of the saved Ethereum address from etherscan.io API
-          // Replace with your etherscan API key
-          const etherscanApiUrl = `https://api.etherscan.io/api?module=account&action=balance&address=${savedAddress}&tag=latest&apikey=${etherscanApiKey}`;
-          const response = await fetch(etherscanApiUrl);
-          const data = await response.json();
-          const balance = data.result / 10 ** 18; // Convert wei to ether
-  
-          // Update the embed with the saved address and its balance
-          let embed = {
-            color: 0xff0000,
-            author: {
-              name: `Alpha King`,
-            },
-            title: "Wallet Manager",
-            fields: [
-              {
-                name: "Address",
-                value: `\`${savedAddress}\``,
-              },
-              {
-                name: "Balance",
-                value: `${balance} ETH`,
-              },
-            ],
-          };
-  
-          await interaction.update({
-            embeds: [embed],
-            ephemeral: true,
-          });
-          break;
 
       }
   }
