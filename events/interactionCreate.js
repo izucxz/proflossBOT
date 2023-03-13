@@ -196,63 +196,98 @@ client.on("interactionCreate", async (interaction) => {
         }
         break;
 
-      case "wallet":
-        const user = interaction.user;
-        const savedAddress = savedAddresses.get(user.id);
-
-        const row = new ActionRowBuilder().addComponents(
-          new ButtonBuilder()
-            .setCustomId("refresh_wallet")
-            .setLabel("🔄 Refresh")
-            .setStyle("Secondary"),
-          new ButtonBuilder()
-            .setCustomId("balance")
-            .setLabel("🏧 Balance")
-            .setStyle("Secondary"),
+        case "wallet":
+          const user = interaction.user;
+          const savedAddress = savedAddresses.get(user.id);
+  
+          const row = new ActionRowBuilder().addComponents(
             new ButtonBuilder()
-            .setCustomId("reset_wallet")
-            .setLabel("❎ Reset")
-            .setStyle("Danger")
-        );
-
-        let embed = {
-          color: 0xff0000,
-          author: {
-            name: `Alpha King`,
-          },
-          fields: [
-            {
-              name: "Wallet Manager",
-              value: " ",
-              inline: true,
-            },
-            {
-              name: "Total Wallets",
-              value: `\`${
-                savedAddress ? savedAddress.length.toString() : "0"
-              }\``,
-              inline: true,
-            },
-          ],
-        };
-
-        if (savedAddress) {
-          embed.fields.push(
-            ...savedAddress.map((address, index) => {
-              return {
-                name: " ",
-                value: `\`${index + 1}. ${address}\``,
-              };
-            })
+              .setCustomId("left_page")
+              .setLabel("◀")
+              .setStyle("Secondary"),
+            new ButtonBuilder()
+              .setCustomId("right_page")
+              .setLabel("▶")
+              .setStyle("Secondary"),
+            new ButtonBuilder()
+              .setCustomId("refresh_wallet")
+              .setLabel("🔄")
+              .setStyle("Secondary"),
+            new ButtonBuilder()
+              .setCustomId("reset_wallet")
+              .setLabel("❎ Reset")
+              .setStyle("Danger")
           );
-        }
-
-        await interaction.reply({
-          embeds: [embed],
-          components: [row],
-          ephemeral: true,
-        });
-        break;
+  
+          const page = parseInt(options.getString("page")) || 1;
+          const startIndex = (page - 1) * 5;
+          const endIndex = startIndex + 5;
+  
+          let embed = {
+            color: 0xff0000,
+            author: {
+              name: `Alpha King`,
+            },
+            fields: [
+              {
+                name: "Wallet Manager",
+                value: " ",
+                inline: true,
+              },
+              {
+                name: "Total Wallets",
+                value: `\`${
+                  savedAddress ? savedAddress.length.toString() : "0"
+                }\``,
+                inline: true,
+              },
+            ],
+          };
+  
+          if (savedAddress && savedAddress.length > 0) {
+            const totalPages = Math.ceil(savedAddress.length / 5);
+  
+            if (page > totalPages || page <= 0) {
+              await interaction.reply({
+                content: "Invalid page number.",
+                ephemeral: true,
+              });
+              return;
+            }
+  
+            const addressesToDisplay = savedAddress.slice(startIndex, endIndex);
+  
+            embed.fields.push(
+              ...addressesToDisplay.map((address, index) => {
+                return {
+                  name: " ",
+                  value: `\`${startIndex + index + 1}. ${address}\``,
+                };
+              })
+            );
+  
+            if (totalPages > 1) {
+              row.addComponents(
+                new ButtonBuilder()
+                  .setCustomId("left_page")
+                  .setLabel("◀")
+                  .setStyle("Secondary")
+                  .setDisabled(page === 1),
+                new ButtonBuilder()
+                  .setCustomId("right_page")
+                  .setLabel("▶")
+                  .setStyle("Secondary")
+                  .setDisabled(page === totalPages)
+              );
+            }
+          }
+  
+          await interaction.reply({
+            embeds: [embed],
+            components: [row],
+            ephemeral: true,
+          });
+          break;
 
       case "profit":
         const interactionUser = interaction.user;
