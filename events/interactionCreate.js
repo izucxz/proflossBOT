@@ -202,17 +202,17 @@ client.on("interactionCreate", async (interaction) => {
 
         const row = new ActionRowBuilder().addComponents(
           new ButtonBuilder()
+            .setCustomId("delete_wallet")
+            .setLabel("❎ Delete")
+            .setStyle("Secondary"),
+          new ButtonBuilder()
             .setCustomId("refresh_wallet")
             .setLabel("🔄 Refresh")
             .setStyle("Secondary"),
           new ButtonBuilder()
             .setCustomId("balance")
             .setLabel("🏧 Balance")
-            .setStyle("Secondary"),
-          new ButtonBuilder()
-            .setCustomId("reset_wallet")
-            .setLabel("❎ Reset")
-            .setStyle("Danger"),
+            .setStyle("Secondary")
         );
 
         let embed = {
@@ -396,41 +396,31 @@ client.on("interactionCreate", async (interaction) => {
   if (interaction.isButton()) {
     const user = interaction.user;
 
+    // Declare savedAddress variable here
+    let savedAddress;
+
     switch (interaction.customId) {
-      case "reset_wallet":
-        const modal = new ModalBuilder()
-          .setCustomId("myModal")
-          .setTitle("Reset Wallet");
+      case "delete_wallet":
+        // Check if the user has already saved an Ethereum address
+        savedAddress = savedAddresses.get(user.id);
+        if (!savedAddress) {
+          await interaction.reply({
+            content: "You have not saved any Ethereum address.",
+            ephemeral: true,
+          });
+          return;
+        }
 
-        // Add components to modal
+        // Delete the saved Ethereum address for the user
+        savedAddresses.delete(user.id);
 
-        // Create the text input components
-        const addressInput = new TextInputBuilder()
-          .setCustomId("addressInput")
-          .setLabel("Delete all saved eth address")
-          .setPlaceholder("yes")
-          // Paragraph means multiple lines of text.
-          .setStyle(TextInputStyle.Paragraph);
-
-        // An action row only holds one text input,
-        const firstActionRow = new ActionRowBuilder().addComponents(
-          addressInput
-        );
-
-        // Add inputs to the modal
-        modal.addComponents(firstActionRow);
-
-        // Show the modal to the user
-        await interaction.showModal(modal);
-
+        await interaction.reply({
+          content: "The address has been deleted.",
+          ephemeral: true,
+        });
         break;
 
       case "refresh_wallet":
-        // Get the saved Ethereum addresses for the user
-        const user = interaction.user;
-        // Declare savedAddress variable here
-        let savedAddress;
-
         const savedAddressesArray = savedAddresses.get(user.id) || [];
 
         const totalWallets = savedAddressesArray.length;
@@ -534,25 +524,7 @@ client.on("interactionCreate", async (interaction) => {
           ephemeral: true,
         });
         break;
-    }
-  }
-});
-
-client.on(Events.InteractionCreate, async (interaction) => {
-  if (!interaction.isModalSubmit()) return;
-  const user = interaction.user;
-
-  // Declare savedAddress variable here
-  let savedAddress;
-  if (interaction.customId === "myModal") {
-    // Check if the user has already saved an Ethereum address
-    savedAddress = savedAddresses.get(user.id);
-    // Delete the saved Ethereum address for the user
-    savedAddresses.delete(user.id);
-
-    await interaction.reply({
-      content: "The address has been deleted.",
-      ephemeral: true,
-    });
+    
+      }
   }
 });
