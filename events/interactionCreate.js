@@ -202,10 +202,6 @@ client.on("interactionCreate", async (interaction) => {
 
         const row = new ActionRowBuilder().addComponents(
           new ButtonBuilder()
-            .setCustomId("delete_wallet")
-            .setLabel("❎ Delete")
-            .setStyle("Secondary"),
-          new ButtonBuilder()
             .setCustomId("refresh_wallet")
             .setLabel("🔄 Refresh")
             .setStyle("Secondary"),
@@ -213,6 +209,10 @@ client.on("interactionCreate", async (interaction) => {
             .setCustomId("balance")
             .setLabel("🏧 Balance")
             .setStyle("Secondary"),
+          new ButtonBuilder()
+            .setCustomId("reset_wallet")
+            .setLabel("❎ Reset")
+            .setStyle("Danger"),
         );
 
         let embed = {
@@ -397,7 +397,7 @@ client.on("interactionCreate", async (interaction) => {
     const user = interaction.user;
 
     switch (interaction.customId) {
-      case "delete_wallet":
+      case "reset_wallet":
         const modal = new ModalBuilder()
           .setCustomId("myModal")
           .setTitle("Delete Wallet");
