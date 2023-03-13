@@ -396,22 +396,19 @@ client.on("interactionCreate", async (interaction) => {
   if (interaction.isButton()) {
     const user = interaction.user;
 
-    // Declare savedAddress variable here
-    let savedAddress;
-
     switch (interaction.customId) {
       case "delete_wallet":
         const modal = new ModalBuilder()
           .setCustomId("myModal")
-          .setTitle("Reset Wallet");
+          .setTitle("Delete Wallet");
 
         // Add components to modal
 
         // Create the text input components
         const addressInput = new TextInputBuilder()
           .setCustomId("addressInput")
-          .setLabel("Type yes to delete all saved addresses")
-          .setPlaceholder("Yes/Cancel")
+          .setLabel("Delete saved eth address")
+          .setPlaceholder("0x123")
           // Paragraph means multiple lines of text.
           .setStyle(TextInputStyle.Paragraph);
 
@@ -431,6 +428,9 @@ client.on("interactionCreate", async (interaction) => {
       case "refresh_wallet":
         // Get the saved Ethereum addresses for the user
         const user = interaction.user;
+        // Declare savedAddress variable here
+        let savedAddress;
+
         const savedAddressesArray = savedAddresses.get(user.id) || [];
 
         const totalWallets = savedAddressesArray.length;
