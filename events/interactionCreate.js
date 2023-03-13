@@ -203,7 +203,7 @@ client.on("interactionCreate", async (interaction) => {
         const row = new ActionRowBuilder().addComponents(
           new ButtonBuilder()
             .setCustomId("delete_wallet")
-            .setLabel("❎ Delete")
+            .setLabel("❎ Reset")
             .setStyle("Secondary"),
           new ButtonBuilder()
             .setCustomId("refresh_wallet")
@@ -212,7 +212,7 @@ client.on("interactionCreate", async (interaction) => {
           new ButtonBuilder()
             .setCustomId("balance")
             .setLabel("🏧 Balance")
-            .setStyle("Secondary")
+            .setStyle("Secondary"),
         );
 
         let embed = {
@@ -403,15 +403,15 @@ client.on("interactionCreate", async (interaction) => {
       case "delete_wallet":
         const modal = new ModalBuilder()
           .setCustomId("myModal")
-          .setTitle("Delete Wallet");
+          .setTitle("Reset Wallet");
 
         // Add components to modal
 
         // Create the text input components
         const addressInput = new TextInputBuilder()
           .setCustomId("addressInput")
-          .setLabel("Enter the Ethereum address to delete")
-          .setPlaceholder("0x123...")
+          .setLabel("Type yes to delete all saved addresses")
+          .setPlaceholder("Yes/Cancel")
           // Paragraph means multiple lines of text.
           .setStyle(TextInputStyle.Paragraph);
 
