@@ -39,7 +39,7 @@ client.on("ready", () => {
         {
           type: 3,
           name: 'address',
-          description: 'Add your Ethereum address to the saved addresses',
+          description: 'Add an ethereum address or list of ethereum addresses.',
           required: true,
           options: [{
               type: ApplicationCommandOptionType.STRING,
@@ -51,13 +51,13 @@ client.on("ready", () => {
     },
     {
       name: 'wallet_delete',
-      description: 'Save your Ethereum address',
+      description: 'Delete your saved Ethereum address',
       type: ApplicationCommandType.ChatInput,
       options: [
         {
           type: 3,
           name: 'index',
-          description: 'Add your Ethereum address to the saved addresses',
+          description: 'Delete your Ethereum address or list of ethereum addresses by input number.',
           required: true,
           options: [{
               type: ApplicationCommandOptionType.STRING,
