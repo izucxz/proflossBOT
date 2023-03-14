@@ -217,7 +217,7 @@ client.on("interactionCreate", async (interaction) => {
             // Delete the specified addresses
             const deletedAddresses = [];
             indexes.sort().forEach((i) => {
-              const address = savedAddressesArray.splice(i, 1)[0];
+              const address = savedAddressesArray.splice(i - deletedAddresses.length, 1)[0];
               deletedAddresses.push(address);
             });
         
