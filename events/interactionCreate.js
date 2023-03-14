@@ -166,36 +166,33 @@ client.on("interactionCreate", async (interaction) => {
         const addOption = options.get("address");
         if (addOption) {
           const user = interaction.user;
-          const address = addOption.value;
-
-          // Check if the provided Ethereum address is valid
+          const addresses = addOption.value.split(",").map((address) => address.trim());
+          
+          // Check if all provided Ethereum addresses are valid
           const web3 = new Web3("https://mainnet.infura.io/v3/your_project_id");
-          if (!web3.utils.isAddress(address)) {
+          if (!addresses.every((address) => web3.utils.isAddress(address))) {
             await interaction.reply({
-              content: "Please provide a valid Ethereum address.",
+              content: "Please provide valid Ethereum addresses.",
               ephemeral: true,
             });
             return;
           }
-
-          // Add the new address to the user's list of saved addresses
+      
+          // Add the new addresses to the user's list of saved addresses
           let savedAddressesArray = savedAddresses.get(user.id) || [];
-          if (savedAddressesArray.includes(address)) {
-            await interaction.reply({
-              content: "You have already saved this Ethereum address.",
-              ephemeral: true,
-            });
-          } else {
-            savedAddressesArray.push(address);
-            savedAddresses.set(user.id, savedAddressesArray);
-            await interaction.reply({
-              content: `Ethereum address ${address} has been saved.`,
-              ephemeral: true,
-            });
-          }
+          const newAddresses = addresses.filter((address) => !savedAddressesArray.includes(address));
+          savedAddressesArray.push(...newAddresses);
+          savedAddresses.set(user.id, savedAddressesArray);
+          const message = newAddresses.length === 1
+            ? `Ethereum address \`${newAddresses[0]}\` has been saved.`
+            : `Ethereum addresses \`${newAddresses.join(", ")}\` have been saved.`;
+          await interaction.reply({
+            content: message,
+            ephemeral: true,
+          });
         }
         break;
-
+      
       case "wallet_delete":
           // Check if the user has specified the 'index' option
           const indexOption = options.get("index");
