@@ -256,11 +256,7 @@ client.on("interactionCreate", async (interaction) => {
               .setLabel("❎ Reset")
               .setStyle("Danger")
           );
-  
-          const page = parseInt(options.getString("page")) || 1;
-          const startIndex = (page - 1) * 5;
-          const endIndex = startIndex + 5;
-  
+
           let embed = {
             color: 0xff0000,
             author: {
@@ -282,42 +278,15 @@ client.on("interactionCreate", async (interaction) => {
             ],
           };
   
-          if (savedAddress && savedAddress.length > 0) {
-            const totalPages = Math.ceil(savedAddress.length / 5);
-  
-            if (page > totalPages || page <= 0) {
-              await interaction.reply({
-                content: "Invalid page number.",
-                ephemeral: true,
-              });
-              return;
-            }
-  
-            const addressesToDisplay = savedAddress.slice(startIndex, endIndex);
-  
+          if (savedAddress) {
             embed.fields.push(
-              ...addressesToDisplay.map((address, index) => {
+              ...savedAddress.map((address, index) => {
                 return {
                   name: " ",
-                  value: `\`${startIndex + index + 1}. ${address}\``,
+                  value: `\`${index + 1}. ${address}\``,
                 };
               })
             );
-  
-            if (totalPages > 1) {
-              row.addComponents(
-                new ButtonBuilder()
-                  .setCustomId("left_page")
-                  .setLabel("◀")
-                  .setStyle("Secondary")
-                  .setDisabled(page === 1),
-                new ButtonBuilder()
-                  .setCustomId("right_page")
-                  .setLabel("▶")
-                  .setStyle("Secondary")
-                  .setDisabled(page === totalPages)
-              );
-            }
           }
   
           await interaction.reply({
