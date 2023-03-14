@@ -50,6 +50,24 @@ client.on("ready", () => {
         }],
     },
     {
+      name: 'wallet_delete',
+      description: 'Save your Ethereum address',
+      type: ApplicationCommandType.ChatInput,
+      options: [
+        {
+          type: 3,
+          name: 'index',
+          description: 'Add your Ethereum address to the saved addresses',
+          required: true,
+          options: [{
+              type: ApplicationCommandOptionType.STRING,
+              name: 'address',
+              description: 'Your Ethereum address',
+              required: true,
+            }]
+        }],
+    },
+    {
       name: 'wallet',
       description: 'Manage your saved Ethereum addresses',
       type: ApplicationCommandType.ChatInput,
