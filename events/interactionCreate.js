@@ -196,6 +196,44 @@ client.on("interactionCreate", async (interaction) => {
         }
         break;
 
+      case "wallet_delete":
+          // Check if the user has specified the 'index' option
+          const indexOption = options.get("index");
+          if (indexOption) {
+            const user = interaction.user;
+            const savedAddressesArray = savedAddresses.get(user.id) || [];
+        
+            // Convert the index option to an array of integers
+            const indexes = indexOption.value.split(",").map((i) => parseInt(i) - 1);
+        
+            // Check if all the specified indexes are valid
+            if (
+              indexes.some((i) => isNaN(i) || i < 0 || i >= savedAddressesArray.length)
+            ) {
+              await interaction.reply({
+                content: "Invalid index.",
+                ephemeral: true,
+              });
+              return;
+            }
+        
+            // Delete the specified addresses
+            const deletedAddresses = [];
+            indexes.sort().forEach((i) => {
+              const address = savedAddressesArray.splice(i, 1)[0];
+              deletedAddresses.push(address);
+            });
+        
+            savedAddresses.set(user.id, savedAddressesArray);
+            await interaction.reply({
+              content: `Ethereum address${indexes.length > 1 ? "es" : ""} ${
+                deletedAddresses.map((a) => `\`${a}\``).join(", ")
+              } ${indexes.length > 1 ? "have" : "has"} been deleted.`,
+              ephemeral: true,
+            });
+          }
+          break;
+        
       case "wallet":
           const user = interaction.user;
           const savedAddress = savedAddresses.get(user.id);
